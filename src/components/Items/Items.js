@@ -1,37 +1,12 @@
 import React, { useReducer, useEffect, useCallback } from 'react';
 
+import httpReducer from '../reducers/httpRequest';
+import itemReducer from '../reducers/items'
 import ItemForm from './ItemForm';
 import ItemList from './ItemList';
 import ErrorModal from '../UI/ErrorModal';
 import Search from './Search';
 
-const itemReducer = (currentItems, action) => {
-  switch (action.type) {
-    case 'SET':
-      return action.items;
-    case 'ADD':
-      return [...currentItems, action.item];
-    case 'DELETE':
-      return currentItems.filter(ing => ing.id !== action.id);
-    default:
-      throw new Error('Should not get there!');
-  }
-};
-
-const httpReducer = (curHttpState, action) => {
-  switch (action.type) {
-    case 'SEND':
-      return { loading: true, error: null };
-    case 'RESPONSE':
-      return { ...curHttpState, loading: false };
-    case 'ERROR':
-      return { loading: false, error: action.errorMessage };
-    case 'CLEAR':
-      return { ...curHttpState, error: null };
-    default:
-      throw new Error('Should not be reached!');
-  }
-};
 
 const Items = () => {
   const [userItems, dispatch] = useReducer(itemReducer, []);
@@ -45,7 +20,7 @@ const Items = () => {
   }, [userItems]);
 
   const filteredItemsHandler = useCallback(filteredItems => {
- 
+
     dispatch({ type: 'SET', items: filteredItems });
   }, []);
 
